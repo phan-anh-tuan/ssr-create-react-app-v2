@@ -1,23 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Provider } from 'react-redux'
-import { BrowserRouter } from 'react-router-dom'
+//import HelloTransmitContainer from './containers/Hello'
+import Hello from './containers/Hello'
 
-import configureStore from './store'
-import './index.css'
-import App from './containers/App'
-import registerServiceWorker from './registerServiceWorker'
-
-// Let the reducers handle initial state
-const initialState = {}
-const store = configureStore(initialState)
-
-ReactDOM.render(
-  <Provider store={store}>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </Provider>
-, document.getElementById('root')
-)
-registerServiceWorker()
+ReactDOM.render(<Hello posts={{data: [{ 'slug': '1', 'title': 'title 1'}, { 'slug': '2', 'title': 'title 2'}, { 'slug': '3', 'title': 'title 3'}, { 'slug': '4', 'title': 'title 4'}, { 'slug': '5', 'title': 'title 5'}, { 'slug': '6', 'title': 'title 6'}]}}/>, document.getElementById('root'))
