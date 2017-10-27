@@ -1,23 +1,35 @@
-import React, { Component } from 'react'
-import { Switch, Route } from 'react-router-dom'
-import FirstPage from './FirstPage'
-import SecondPage from './SecondPage'
-import NoMatch from '../components/NoMatch'
+const React = require('react')
+const render = require('react-dom').render
+const redux = require('redux')
+const createStore = redux.createStore
+const applyMiddleware = redux.applyMiddleware
+const Provider = require('react-redux').Provider
+const thunkMiddleware = require('redux-thunk').default
+const createLogger = require('redux-logger').createLogger
+const helloReducer = require('../reducers/helloReducer')
+const Hello = require('./Hello')
 
-export default class App extends Component {
+module.exports = exports = class App extends React.Component {
+
   render(){
+    const loggerMiddleware = createLogger();
+    // Grab the state from a global variable injected into the server-generated HTML
+    
+    const preloadedState = window.__PRELOADED_STATE__
+
+    // Allow the passed state to be garbage-collected
+    delete window.__PRELOADED_STATE__
+
+    // Create Redux store with initial state
+    const store = createStore(helloReducer,
+                              preloadedState,
+                              applyMiddleware(thunkMiddleware,
+                                              loggerMiddleware
+                              ))
     return (
-      <div>
-        <h1>Server Side Rendering with Create React App v2</h1>
-        <p>Hey, so I've rewritten this example with react-router v4</p>
-        <p>This code is on github: <a href='https://github.com/ayroblu/ssr-create-react-app-v2'>https://github.com/ayroblu/ssr-create-react-app-v2</a></p>
-        <p>Medium article: <a href='https://medium.com/@benlu/ssr-with-create-react-app-v2-1b8b520681d9'>https://medium.com/@benlu/ssr-with-create-react-app-v2-1b8b520681d9</a></p>
-        <Switch>
-          <Route exact path="/" component={FirstPage}/>
-          <Route path="/second" component={SecondPage}/>
-          <Route component={NoMatch}/>
-        </Switch>
-      </div>
+      <Provider store={store}>
+        <Hello />
+      </Provider>
     )
   }
 }
